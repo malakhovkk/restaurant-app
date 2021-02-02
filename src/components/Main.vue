@@ -110,7 +110,6 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     width:85%;
-    margin:0 auto;
 
 }
 
