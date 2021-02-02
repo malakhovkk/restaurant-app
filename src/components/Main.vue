@@ -1,14 +1,16 @@
 <template>
 <div class="wrapper">
-<Loading v-if='isLoading'/>
-<div v-if='!isLoading'>
-<Tabs :tabs='AreasNames' @changeArea='changeArea'/>
-  <div class='tables'>
-  <Table @takeTable='takeTable' :value='table.number' :persons='table.q_seats' :takenp='table.taken'  v-for='table in AcitveTables'
+
+  <Loading v-if='isLoading'/>
+  <div v-if='err'>{{err}} </div>
+  <div v-if='!isLoading'>
+    <Tabs :tabs='AreasNames' @changeArea='changeArea'/>
+    <div class='tables'>
+      <Table @takeTable='takeTable' :value='table.number' :persons='table.q_seats' :takenp='table.taken'  v-for='table in AcitveTables'
               :key='table.id' :id='table.id' />
              
+    </div>
   </div>
-</div>
 </div>
 </template>
 
@@ -33,7 +35,8 @@ export default {
       isLoading:true,
       areas: null,
       idArea: null,
-      tablesSelected:[]
+      tablesSelected:[],
+      err: null
   }},
   beforeCreate()
   {
@@ -52,6 +55,7 @@ export default {
   },
   created()
   {
+    
     axios.post("https://www.re-check.com:8080/login",
  {jsonrpc:"2.0", method: "jwt", params:[ {"login":"12345", client:"{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}", pwd:"NTQzMjE="}], id:4})
     .then((data) => {
@@ -74,6 +78,8 @@ export default {
             this.tables = data.data.result.tables.filter(el => {el.taken = 0; return el});
             this.isLoading = false;
             this.areas = data.data.result.areas;
+          }).catch((err) => {
+            this.err = err;
           });
 
 
