@@ -64,7 +64,7 @@ export default {
 <style scoped>
 .loading 
 {
-  margin-left: 30vw;
-  margin-top: 50vh;
+  margin-left: 20vw;
+  margin-top: 30vh;
 }
 </style>
