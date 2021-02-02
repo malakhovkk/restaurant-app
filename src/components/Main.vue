@@ -108,5 +108,24 @@ export default {
 
 }
 
+@media only screen and (max-width: 910px) {
+  .tables {
+    width:600px;
+  }
+
+}
+
+@media only screen and (max-width: 610px){
+  .tables {
+    width:250px;
+  }
+  
+}
+@media only screen and (max-width: 700px){
+  .tables {
+    width:400px;
+  }
+  
+}
 
 </style>

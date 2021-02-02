@@ -25,6 +25,27 @@ export default {
   margin: 0 auto;
 
 }
+
+@media only screen and (max-width: 910px) {
+  #app {
+    width:750px;
+  }
+
+}
+
+@media only screen and (max-width: 610px){
+  #app {
+    width:450px;
+  }
+  
+}
+@media only screen and (max-width: 700px){
+  #app {
+    width:550px;
+  }
+  
+}
+
 .route 
 {
   text-decoration: none;
@@ -43,6 +64,9 @@ export default {
 {
     background-image: url(../public/images/main.png);
 }
+
+
+
 
 .route::before 
 {

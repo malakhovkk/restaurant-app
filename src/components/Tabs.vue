@@ -49,7 +49,6 @@ export default {
 /* Style the tab */
 .tab {
   overflow: hidden;
-  width:800px;
   margin:0 auto;
 
 }
