@@ -46,25 +46,6 @@ export default {
   
 }
 
-@media only screen and (max-width: 910px) {
-  .main {
-    width:600px;
-  }
-
-}
-
-@media only screen and (max-width: 610px){
-  .main {
-    width:250px;
-  }
-  
-}
-@media only screen and (max-width: 700px){
-  .main {
-    width:400px;
-  }
-  
-}
 
 .route 
 {

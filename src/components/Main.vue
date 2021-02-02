@@ -103,26 +103,30 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width:800px;
+    width:85%;
     margin:0 auto;
 
 }
 
+.wrapper 
+{
+  width:850px;
+}
 @media only screen and (max-width: 910px) {
-  .tables {
+  .wrapper {
     width:600px;
   }
 
 }
 
 @media only screen and (max-width: 610px){
-  .tables {
+  .wrapper {
     width:250px;
   }
   
 }
 @media only screen and (max-width: 700px){
-  .tables {
+  .wrapper {
     width:400px;
   }
   

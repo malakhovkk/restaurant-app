@@ -22,9 +22,9 @@ button {
   transition: 0.3s;
   font-size: 17px;
   background-color: #eae7e7;
-    margin-left: 10px;
-    border-radius: 5px;
-        color: #7d7070;
+  margin-left: 10px;
+  border-radius: 5px;
+  color: #7d7070;
 }
 
 
