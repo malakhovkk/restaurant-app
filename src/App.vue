@@ -67,6 +67,7 @@ export default {
   width:100px;
   font-size: 22px;
   text-transform: uppercase;
-  position: fixed;
+  position: sticky;
+  top:2px;
 }
 </style>
