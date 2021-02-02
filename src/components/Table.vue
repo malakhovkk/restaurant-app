@@ -88,7 +88,7 @@ export default {
     background-image: linear-gradient(to bottom left,#e14eca,#b641f9,#e14eca);
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 500px){
   .b {
     width: 65px;
     height: 65px;
