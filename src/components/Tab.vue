@@ -21,18 +21,11 @@ button {
   padding: 14px 16px;
   transition: 0.3s;
   font-size: 17px;
+  background-color: #eae7e7;
+    margin-left: 10px;
+    border-radius: 5px;
+        color: #7d7070;
 }
-
-/* Change background color of buttons on hover */
-button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-button.active {
-  background-color: #ccc;
-}
-
 
 
 </style>

@@ -1,4 +1,5 @@
 <template>
+<div class='loading'>
   <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: none; display: block; shape-rendering: auto;" width="74px" height="74px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
 <g transform="rotate(0 50 50)">
   <rect x="45.5" y="9.5" rx="4.5" ry="7.5" width="9" height="15" fill="#ffdb7c">
@@ -50,6 +51,7 @@
   </rect>
 </g>
 </svg>
+</div>
 </template>
 
 <script>
@@ -60,5 +62,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.loading 
+{
+  margin-left: 30vw;
+  margin-top: 50vh;
+}
 </style>

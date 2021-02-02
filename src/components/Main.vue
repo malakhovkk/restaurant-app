@@ -1,5 +1,5 @@
 <template>
-
+<div class="wrapper">
 <Loading v-if='isLoading'/>
 <div v-if='!isLoading'>
 <Tabs :tabs='AreasNames' @changeArea='changeArea'/>
@@ -8,6 +8,7 @@
               :key='table.id' :id='table.id' />
              
   </div>
+</div>
 </div>
 </template>
 
@@ -96,6 +97,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
+.wrapper 
+{
+  margin-left: 140px;
+}
 .tables 
 {
     display: flex;
@@ -103,6 +108,7 @@ export default {
     flex-wrap: wrap;
     width:800px;
     margin:0 auto;
+
 }
 
 

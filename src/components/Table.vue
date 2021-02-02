@@ -32,13 +32,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');s
 .table
 {
     border: none;
     outline: none;
     position: relative;
-    padding-top: 20px;
+    padding-top: 10px;
+    
 }
 .persons{
     position: absolute;
@@ -46,13 +46,16 @@ export default {
     bottom:10px;
     font-size:16px;
 }
-.persons:after
+.persons::after
 {
-    content:url('../../public/images/profile2.jpg');
-
-    bottom:-4px;
+    content:'';
+    height:20px;
+    width:20px;
+    background-image: url(../../public/images/profile.png);
+    bottom:0px;
     right:18px;
     position:absolute;
+    background-size: cover;
 }
 .b
 {
@@ -60,33 +63,28 @@ export default {
     height: 100px;
     border-radius:6px;
     position: relative;
-    border:2px solid gray;
     margin:5px;
     cursor:pointer;
     font-family: 'Oswald', sans-serif;
     font-size: 20px;
     font-weight: bold;
     box-sizing: border-box;
-}
-@keyframes move {
-  0% {box-shadow: 0px 0px 0px 0px #ccc;}
-  100% {box-shadow:         3px 3px 5px 6px #ccc;}
+    box-shadow: 3px 3px 6px 1px #ccc;
+    background-size: cover;
+    color: white;
 }
 
-.b:hover
-{
-    animation: move 2s infinite;
-}
 .table--taken 
 {
-    border:2px solid red;
+  
 }
 .table--free 
 {
-    border:2px solid green;
+    background-image: linear-gradient(to bottom left,#49d84e,#40c750,#3f9a42);
+     
 }
 .table--selected
 {
-    border:4px solid gray;
+    background-image: linear-gradient(to bottom left,#e14eca,#b641f9,#e14eca);
 }
 </style>

@@ -49,15 +49,17 @@ export default {
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
   width:800px;
   margin:0 auto;
+
 }
 .clicked 
 {
-    background-color: #ddd;
+    background-color: #ccc7c7;
 }
+
+
+
 </style>
 
 

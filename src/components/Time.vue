@@ -1,11 +1,13 @@
 <template>
-    <div></div>
+    <div class='booking'>
+     
+    </div>
 </template>
 
 <script>
 
 export default {
-  name: 'Time'
+  name: 'Time',
 }
 </script>
 
