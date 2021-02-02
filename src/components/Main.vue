@@ -138,4 +138,13 @@ export default {
   
 }
 
+
+@media only screen and (max-width: 400px){
+  .wrapper {
+    width:100%;
+  }
+  
+}
+
+
 </style>

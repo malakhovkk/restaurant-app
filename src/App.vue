@@ -26,6 +26,34 @@ export default {
 
 }
 
+#nav 
+{
+   padding: 30px 12px;
+   background-image: linear-gradient(to bottom left,#cec92f,#c6da1d,#c2c512);
+   border-radius: 3px;
+   height: 90vh;
+   margin-right:10px;
+   display:flex;
+  flex-direction: column;
+  width:100px;
+  font-size: 22px;
+  text-transform: uppercase;
+  position: sticky;
+  top:2px;
+}
+
+.route::before 
+{
+  content:'';
+  left: 3px;
+  top: 7px;
+  width:20px;
+  height:20px;
+  right:0;
+  position:absolute;
+  background-size:cover;
+}
+
 @media only screen and (max-width: 910px) {
   #app {
     width:750px;
@@ -39,12 +67,32 @@ export default {
   }
   
 }
+
 @media only screen and (max-width: 700px){
   #app {
     width:550px;
   }
   
 }
+
+@media only screen and (max-width: 400px){
+  #app {
+    width:100%;
+  }
+  #nav 
+  {
+    font-size: 15px;
+    width: 80px;
+  }
+  .route::before 
+  {
+    width: 12px;
+    height: 12px
+  }
+}
+
+
+
 
 
 .route 
@@ -69,30 +117,6 @@ export default {
 
 
 
-.route::before 
-{
-  content:'';
-  left: 3px;
-  top: 7px;
-  width:20px;
-  height:20px;
-  right:0;
-  position:absolute;
-  background-size:cover;
-}
-#nav 
-{
-   padding: 30px 12px;
-   background-image: linear-gradient(to bottom left,#cec92f,#c6da1d,#c2c512);
-   border-radius: 3px;
-   height: 90vh;
-   margin-right:10px;
-   display:flex;
-  flex-direction: column;
-  width:100px;
-  font-size: 22px;
-  text-transform: uppercase;
-  position: sticky;
-  top:2px;
-}
+
+
 </style>

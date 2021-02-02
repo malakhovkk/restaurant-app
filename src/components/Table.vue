@@ -87,4 +87,16 @@ export default {
 {
     background-image: linear-gradient(to bottom left,#e14eca,#b641f9,#e14eca);
 }
+
+@media only screen and (max-width: 400px){
+  .b {
+    width: 65px;
+    height: 65px;
+  }
+  #nav 
+  {
+      font-size: 15px;
+  }
+
+}
 </style>
