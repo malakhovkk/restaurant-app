@@ -1,5 +1,8 @@
 <template>
-  <div @click="take()" :class="[{'table--taken':takenp === 1,'table--free':takenp === 0, 'table--selected':takenp === 2}, , 'b']">
+  <div class="table--selected b">
+    <div class='image' @click="close()">
+        <img src='images/exit.png'/>
+    </div>
     <div class='table'>{{value}}  </div> 
     <div class='persons'>{{persons}}</div>
   </div>
@@ -7,31 +10,42 @@
 
 <script>
 export default {
-  name: 'Table',
-  props: ['value','persons','takenp','id'], 
+  name: 'SelectedTable',
+  props: ['value','persons','id'], 
   data()  {
-    return {
-      taken: this.takenp
-    }
+      return {
+
+  }},
+  created()
+  {
+        //  console.log(this.taken);
   },
-        created()
-      {
-          console.log(this.taken);
-      },
   methods:{
-      take()
-      {
-          //console.log(1);
-          if(this.taken === 0) this.taken = 2;
-          else if(this.taken === 2) this.taken = 0;
-          this.$emit('takeTable', this.id, this.taken);
-      }
+    close() 
+    {
+        this.$emit('close',this.id);
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.image 
+{
+    z-index:1;
+    width:15px;
+    height:15px;
+    position:absolute;
+    top: -5px;
+    right: 5px;
+    cursor: pointer;
+}
+img 
+{
+    width:100%;
+    z-index:0;
+}
 .table
 {
     border: none;
@@ -59,8 +73,8 @@ export default {
 }
 .b
 {
-    width:100px;
-    height: 100px;
+    width:80px;
+    height: 80px;
     border-radius:6px;
     position: relative;
     margin:5px;
@@ -86,6 +100,7 @@ export default {
 .table--selected
 {
     background-image: linear-gradient(to bottom left,#e14eca,#b641f9,#e14eca);
+    position: relative;
 }
 
 @media only screen and (max-width: 500px){
