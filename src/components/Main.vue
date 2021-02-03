@@ -10,7 +10,6 @@
               :key='table.id' :id='table.id' />     
     </div>
     <div class="selected">
-      <div class='reserved'><h2> Reserved: </h2></div>
       <SelectedTable @close='close' :value='table.number' :persons='table.q_seats'   v-for='table in SelectedTables'
               :key='table.id' :id='table.id' /> 
     </div>  
@@ -144,7 +143,7 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     width:85%;
-    height:70vh;
+    max-height:70vh;
     overflow:scroll;
 }
 
