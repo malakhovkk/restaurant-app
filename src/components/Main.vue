@@ -94,7 +94,8 @@ export default {
             this.isLoading = false;
             this.areas = data.data.result.areas;
           }).catch((err) => {
-            this.err = err;
+            //this.err = err;
+            console.log(err);
           });
 
 
@@ -106,7 +107,7 @@ export default {
       close(id)
       {
         
-        axios.get(this.url + 'unlock/' +id, {withCredentials: true}).then((data) => {
+        axios.get(this.url + 'unlock/' +id).then((data) => {
             console.log(data);
         }).catch((err) => console.log(err));
 
@@ -128,7 +129,7 @@ export default {
       {
         console.log(10);
         
-        axios.get(this.url + 'lock/' + id, {withCredentials: true}).then((data) => {
+        axios.get(this.url + 'lock/' + id).then((data) => {
              console.log(data);
         },{withCredentials: true}).catch((err) => console.log(err));
 
