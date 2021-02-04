@@ -40,7 +40,8 @@ export default {
       areas: null,
       idArea: null,
       tablesSelected:[],
-      err: null
+      err: null,
+      url:'https://www.re-check.com:5000/tables/'
   }},
   beforeCreate()
   {
@@ -97,16 +98,25 @@ export default {
           });
 
 
-    });
+    }).catch((err) => {
+            this.err = err;
+          });
   },
   methods:{
       close(id)
       {
+        
+        axios.get(this.url + 'unlock/' +id).then((data) => {
+            console.log(data);
+        }).catch((err) => console.log(err));
+
         console.log(11);
         this.tables = this.tables.map(el =>{
           if(el.taken === 2 && el.id === id){ el.taken = 0; console.log(el);}
           return el;
         });
+
+        
 
       },
       changeArea(id)
@@ -117,7 +127,14 @@ export default {
       takeTable(id, taken)
       {
         console.log(10);
+        
+        axios.get(this.url + 'lock/' + id).then((data) => {
+             console.log(data);
+        }).catch((err) => console.log(err));
+
         this.tables = this.tables.map(el => {if(id === el.id){ el.taken = taken; console.log(id)} return el});
+
+       
       }
   }
 }
