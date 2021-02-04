@@ -138,7 +138,7 @@ export default {
     submit() {},
     close(id) {
       axios
-        .get(this.url + 'unlock/' + id, {
+        .post(this.url + 'unlock/' + id, '', {
           headers: {
             Authentication: 'bearer ' + this.bearer,
             'x-token': this.xtoken,
@@ -163,9 +163,8 @@ export default {
     },
     takeTable(id, taken) {
       console.log(10)
-
       axios
-        .get(this.url + 'lock/' + id, {
+        .post(this.url + 'lock/' + id, '', {
           headers: {
             Authentication: 'bearer ' + this.bearer,
             'x-token': this.xtoken,
