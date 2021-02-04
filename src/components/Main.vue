@@ -107,7 +107,7 @@ export default {
       close(id)
       {
         
-        axios.get(this.url + 'unlock/' +id).then((data) => {
+        axios.get(this.url + 'unlock/' +id, {withCredentials: true}).then((data) => {
             console.log(data);
         }).catch((err) => console.log(err));
 
@@ -129,7 +129,7 @@ export default {
       {
         console.log(10);
         
-        axios.get(this.url + 'lock/' + id).then((data) => {
+        axios.get(this.url + 'lock/' + id, {withCredentials: true}).then((data) => {
              console.log(data);
         },{withCredentials: true}).catch((err) => console.log(err));
 
