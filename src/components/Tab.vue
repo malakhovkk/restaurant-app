@@ -1,12 +1,11 @@
 <template>
-    <button>{{value}}</button>
+  <button>{{ value }}</button>
 </template>
 
 <script>
-
 export default {
   name: 'Tab',
-  props: ['value']
+  props: ['value'],
 }
 </script>
 
@@ -26,10 +25,4 @@ button {
   border-radius: 5px;
   color: #7d7070;
 }
-
-
 </style>
-
-
-
-

@@ -1,11 +1,9 @@
 <template>
-  <input type="text" :value='task' 
-        @input='task = $event.target.value' />
+  <input type="text" :value="task" @input="task = $event.target.value" />
   <button @click="increase">+</button>
   <ul>
-    <li v-for='(name, index) in names'
-              :key='`${index}`' >
-               {{name}}
+    <li v-for="(name, index) in names" :key="`${index}`">
+      {{ name }}
     </li>
   </ul>
 </template>
@@ -13,26 +11,26 @@
 <script>
 export default {
   name: 'HelloWorld',
-  
+
   props: {
-    msg: String
-  }, 
-  data: () => {return {
-    counter: 0,
-    names: [],
-    task: ""
-  }},
-  methods:{
-    increase()
-    {
-      this.names.push(this.task);
-      this.task = '';
-    },
-    decrease()
-    {
-      this.counter--;
+    msg: String,
+  },
+  data: () => {
+    return {
+      counter: 0,
+      names: [],
+      task: '',
     }
-  }
+  },
+  methods: {
+    increase() {
+      this.names.push(this.task)
+      this.task = ''
+    },
+    decrease() {
+      this.counter--
+    },
+  },
 }
 </script>
 
