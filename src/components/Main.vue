@@ -70,7 +70,7 @@ export default {
   },
   created()
   {
-    
+    //axios.defaults.withCredentials = true;
     axios.post("https://www.re-check.com:8080/login",
  {jsonrpc:"2.0", method: "jwt", params:[ {"login":"12345", client:"{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}", pwd:"NTQzMjE="}], id:4})
     .then((data) => {
@@ -106,7 +106,7 @@ export default {
       close(id)
       {
         
-        axios.get(this.url + 'unlock/' +id).then((data) => {
+        axios.get(this.url + 'unlock/' +id, {withCredentials: true}).then((data) => {
             console.log(data);
         }).catch((err) => console.log(err));
 
@@ -128,9 +128,9 @@ export default {
       {
         console.log(10);
         
-        axios.get(this.url + 'lock/' + id).then((data) => {
+        axios.get(this.url + 'lock/' + id, {withCredentials: true}).then((data) => {
              console.log(data);
-        }).catch((err) => console.log(err));
+        },{withCredentials: true}).catch((err) => console.log(err));
 
         this.tables = this.tables.map(el => {if(id === el.id){ el.taken = taken; console.log(id)} return el});
 
