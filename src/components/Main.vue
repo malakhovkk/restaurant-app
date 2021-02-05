@@ -1,5 +1,5 @@
 <template>
-  <div :class="{wrapper, blur: loggedin}">
+  <div :class="{wrapper: true, blur: loggedin}">
     <Loading v-if="isLoading" />
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
