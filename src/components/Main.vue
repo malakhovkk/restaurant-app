@@ -1,5 +1,5 @@
 <template>
-  <div :class="{wrapper: true, blur: loggedin}">
+  <div :class="{ wrapper: true, blur: loggedin }">
     <Loading v-if="isLoading" />
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
@@ -30,16 +30,17 @@
 </template>
 
 <script>
-import Table from './Table.vue'
-import SelectedTable from './SelectedTable.vue'
-import Tabs from './Tabs.vue'
-import axios from 'axios'
-import Loading from './Loading.vue'
+import Table from "./Table.vue";
+import SelectedTable from "./SelectedTable.vue";
+import Tabs from "./Tabs.vue";
+import axios from "axios";
+import Loading from "./Loading.vue";
 
 let evtSource;
-//let count = 0;
+let sseFunction;
+let count = 0;
 export default {
-  name: 'Main',
+  name: "Main",
   components: {
     Table,
     Loading,
@@ -50,8 +51,8 @@ export default {
   data: () => {
     return {
       tables: [],
-      xtoken: '',
-      bearer: '',
+      xtoken: "",
+      bearer: "",
       isLoading: true,
       areas: null,
       idArea: null,
@@ -60,147 +61,176 @@ export default {
       login: null,
       pwd: null,
       loggedin: false,
-      url: 'https://www.re-check.com:5000/tables/',
-    }
+      listening: true,
+      url: "https://www.re-check.com:5000/tables/",
+    };
   },
   beforeCreate() {},
   computed: {
     ActiveTables() {
-      console.log(19)
+      console.log(19);
       this.tables.forEach((el) => {
-        if (el.id === 2) console.log(el.taken)
-      })
+        if (el.id === 2) console.log(el.taken);
+      });
       return this.tables.filter((el) => {
-        return this.idArea === null || el.aria_id === this.idArea
-      })
+        return this.idArea === null || el.aria_id === this.idArea;
+      });
     },
     AreasNames() {
-      return this.areas.map((el) => ({origname: el.origname, id: el.id}))
+      return this.areas.map((el) => ({ origname: el.origname, id: el.id }));
     },
     SelectedTables() {
-      console.log(this.tables.filter((el) => el.taken === 2))
-      return this.tables.filter((el) => el.taken === 2)
+      console.log(this.tables.filter((el) => el.taken === 2));
+      return this.tables.filter((el) => el.taken === 2);
     },
   },
-  created() {
+  async created() {
     //axios.defaults.withCredentials = true;
-    this.login = '12345'
-    this.client = '{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}'
-    this.pwd = 'NTQzMjE='
-    axios
-      .post('https://www.re-check.com:8080/login', {
-        jsonrpc: '2.0',
-        method: 'jwt',
-        params: [
-          {
-            login: this.login ,
-            client: this.client,
-            pwd: this.pwd,
-          },
-        ],
-        id: 4,
-      })
-      .then((data) => {
-        console.log(data.data.result)
-
-        let tables = data.data.result
-        console.log(tables['X-token'])
-        this.xtoken = tables['X-token']
-        this.bearer = tables.bearer
-
-        axios
-          .post(
-            tables.url + '/menu',
-            {version: '1.0', method: 'table.list', params: null},
+    this.login = "12345";
+    this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
+    this.pwd = "NTQzMjE=";
+    this.xtoken = "";
+    await axios
+        .post("https://www.re-check.com:8080/login", {
+          jsonrpc: "2.0",
+          method: "jwt",
+          params: [
             {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authentication: 'bearer ' + tables.bearer,
-                'x-token': tables['X-token'],
-              },
-            }
-          )
-          .then((data) => {
-            console.log(data)
-            this.tables = data.data.result.tables.filter((el) => {
-              el.taken = 0
-              return el
-            })
-            this.isLoading = false
-            this.areas = data.data.result.areas
-          })
-          .catch((err) => {
-            //this.err = err;
-            console.log(err)
-          })
-      })
-      .catch((err) => {
-        this.err = err
-      })
-      console.log('a')
-      evtSource =  new EventSource(`https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`);
-      evtSource.addEventListener("locks", function(event) {
-          //console.log(event.data, count);
-          //if(count++ === 10) evtSource.removeEventListener("locks", true);
-          console.log(event.data);
-      });
+              login: this.login,
+              client: this.client,
+              pwd: this.pwd,
+            },
+          ],
+          id: 4,
+        })
+        .then((data) => {
+          console.log(data.data.result);
 
+          let tables = data.data.result;
+          //console.log(tables["X-token"]);
+
+          this.bearer = tables.bearer;
+          this.xtoken = tables["X-token"];
+          console.log(this.xtoken);
+          axios
+            .post(
+              tables.url + "/menu",
+              { version: "1.0", method: "table.list", params: null },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                  Authentication: "bearer " + tables.bearer,
+                  "x-token": tables["X-token"],
+                },
+              }
+            )
+            .then((data) => {
+              console.log(data);
+              this.tables = data.data.result.tables.filter((el) => {
+                el.taken = 0;
+                return el;
+              });
+              this.isLoading = false;
+              this.areas = data.data.result.areas;
+            })
+            .catch((err) => {
+              //this.err = err;
+              console.log(err);
+            });
+          
+        })
+        .catch((err) => {
+          this.err = err;
+        });
+    
+    console.log(this)
+    console.log("a");
+    console.log(this.xtoken);
+    evtSource = new EventSource(
+      `https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
+    );
+    sseFunction = function (event) {
+      console.log(event.data, count, event.data['"current"']);
+      let result = JSON.parse(event.data);
+      console.log(this.tables);
+      this.tables = this.tables.map((el) => {
+         result.current.forEach(tableId =>{
+          if(el.id === tableId)
+          {
+            el.taken = 2;
+          }
+         });
+          return el;
+        }
+      );
+
+      //if (count++ === 5)
+      //{
+      //  evtSource.removeEventListener("locks", sseFunction, false)
+      //  this.listening = false;
+      //}
+      //console.log(event.data);
+    }
+
+    evtSource.addEventListener("locks", sseFunction.bind(this), false) ;
   },
   onBeforeUnmount() {
-    evtSource.removeEventListener("locks");
+    //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
+    //evtSource.removeEventListener("locks", sseFunction, false)
+    evtSource.close();
   },
   methods: {
     submit() {},
     close(id) {
       axios
-        .post(this.url + 'unlock/' + id, '', {
+        .post(this.url + "unlock/" + id, "", {
           headers: {
-            Authentication: 'bearer ' + this.bearer,
-            'x-token': this.xtoken,
+            Authentication: "bearer " + this.bearer,
+            "x-token": this.xtoken,
           },
         })
         .then((data) => {
-          console.log(data)
+          console.log(data);
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
 
       this.tables = this.tables.map((el) => {
         if (el.taken === 2 && el.id === id) {
-          el.taken = 0
-          console.log(el)
+          el.taken = 0;
+          console.log(el);
         }
-        return el
-      })
+        return el;
+      });
     },
     changeArea(id) {
-      console.log(id)
-      this.idArea = id
+      console.log(id);
+      this.idArea = id;
     },
     takeTable(id, taken) {
-      console.log(10)
+      console.log(10);
       axios
-        .post(this.url + 'lock/' + id, '', {
+        .post(this.url + "lock/" + id, "", {
           headers: {
-            Authentication: 'bearer ' + this.bearer,
-            'x-token': this.xtoken,
+            Authentication: "bearer " + this.bearer,
+            "x-token": this.xtoken,
           },
         })
         .then((data) => {
-          console.log(data)
+          console.log(data);
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
 
       this.tables = this.tables.map((el) => {
         if (id === el.id) {
-          el.taken = taken
-          console.log(id)
+          el.taken = taken;
+          console.log(id);
         }
-        return el
-      })
+        return el;
+      });
     },
   },
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -255,4 +285,4 @@ export default {
 }
 </style>
 
-}
+} 
