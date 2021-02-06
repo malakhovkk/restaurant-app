@@ -36,6 +36,8 @@ import Tabs from './Tabs.vue'
 import axios from 'axios'
 import Loading from './Loading.vue'
 
+let evtSource;
+//let count = 0;
 export default {
   name: 'Main',
   components: {
@@ -82,15 +84,18 @@ export default {
   },
   created() {
     //axios.defaults.withCredentials = true;
+    this.login = '12345'
+    this.client = '{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}'
+    this.pwd = 'NTQzMjE='
     axios
       .post('https://www.re-check.com:8080/login', {
         jsonrpc: '2.0',
         method: 'jwt',
         params: [
           {
-            login: '12345',
-            client: '{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}',
-            pwd: 'NTQzMjE=',
+            login: this.login ,
+            client: this.client,
+            pwd: this.pwd,
           },
         ],
         id: 4,
@@ -133,6 +138,17 @@ export default {
       .catch((err) => {
         this.err = err
       })
+      console.log('a')
+      evtSource =  new EventSource(`https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`);
+      evtSource.addEventListener("locks", function(event) {
+          //console.log(event.data, count);
+          //if(count++ === 10) evtSource.removeEventListener("locks", true);
+          console.log(event.data);
+      });
+
+  },
+  onBeforeUnmount() {
+    evtSource.removeEventListener("locks");
   },
   methods: {
     submit() {},
