@@ -21,26 +21,17 @@ export default {
   name: "Table",
   props: ["value", "persons", "takenp", "id"],
   data() {
-    return {
-      taken: this.takenp,
-    };
+    return {};
   },
-  watch: {
-    taken: function (_new, old) {
-      console.log(_new, old);
-    },
-  },
-  created() {
-    console.log(this.taken);
-  },
+  created() {},
   methods: {
     take() {
       //console.log(1);
-      if (this.taken === 0) {
-        this.taken = 2;
-        this.$emit("takeTable", this.id, this.taken);
-      } else if (this.taken === 2) {
-        this.taken = 0;
+      if (this.takenp === 0) {
+        console.log(11111);
+        this.$emit("takeTable", this.id, 2);
+      } else if (this.takenp === 2) {
+        console.log(22222);
         this.$emit("close", this.id);
       }
     },
