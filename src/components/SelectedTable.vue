@@ -10,20 +10,20 @@
 
 <script>
 export default {
-  name: 'SelectedTable',
-  props: ['value', 'persons', 'id'],
+  name: "SelectedTable",
+  props: ["value", "persons", "id"],
   data() {
-    return {}
+    return {};
   },
   created() {
     //  console.log(this.taken);
   },
   methods: {
     close() {
-      this.$emit('close', this.id)
+      this.$emit("close", this.id);
     },
   },
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -54,7 +54,7 @@ img {
   font-size: 16px;
 }
 .persons::after {
-  content: '';
+  content: "";
   height: 20px;
   width: 20px;
   background-image: url(../../public/images/profile.png);
@@ -70,7 +70,7 @@ img {
   position: relative;
   margin: 5px;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 20px;
   font-weight: bold;
   box-sizing: border-box;

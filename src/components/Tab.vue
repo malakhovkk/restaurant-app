@@ -4,9 +4,9 @@
 
 <script>
 export default {
-  name: 'Tab',
-  props: ['value'],
-}
+  name: "Tab",
+  props: ["value"],
+};
 </script>
 
 <style scoped>

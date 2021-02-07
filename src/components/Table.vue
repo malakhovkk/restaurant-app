@@ -18,25 +18,34 @@
 
 <script>
 export default {
-  name: 'Table',
-  props: ['value', 'persons', 'takenp', 'id'],
+  name: "Table",
+  props: ["value", "persons", "takenp", "id"],
   data() {
     return {
       taken: this.takenp,
-    }
+    };
+  },
+  watch: {
+    taken: function (_new, old) {
+      console.log(_new, old);
+    },
   },
   created() {
-    console.log(this.taken)
+    console.log(this.taken);
   },
   methods: {
     take() {
       //console.log(1);
-      if (this.taken === 0) this.taken = 2
-      else if (this.taken === 2) this.taken = 0
-      this.$emit('takeTable', this.id, this.taken)
+      if (this.taken === 0) {
+        this.taken = 2;
+        this.$emit("takeTable", this.id, this.taken);
+      } else if (this.taken === 2) {
+        this.taken = 0;
+        this.$emit("close", this.id);
+      }
     },
   },
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -54,7 +63,7 @@ export default {
   font-size: 16px;
 }
 .persons::after {
-  content: '';
+  content: "";
   height: 20px;
   width: 20px;
   background-image: url(../../public/images/profile.png);
@@ -70,7 +79,7 @@ export default {
   position: relative;
   margin: 5px;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   font-size: 20px;
   font-weight: bold;
   box-sizing: border-box;

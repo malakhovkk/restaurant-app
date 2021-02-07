@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
 
   props: {
     msg: String,
@@ -19,19 +19,19 @@ export default {
     return {
       counter: 0,
       names: [],
-      task: '',
-    }
+      task: "",
+    };
   },
   methods: {
     increase() {
-      this.names.push(this.task)
-      this.task = ''
+      this.names.push(this.task);
+      this.task = "";
     },
     decrease() {
-      this.counter--
+      this.counter--;
     },
   },
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

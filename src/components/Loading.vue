@@ -260,8 +260,8 @@
 
 <script>
 export default {
-  name: 'Loading',
-}
+  name: "Loading",
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

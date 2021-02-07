@@ -7,6 +7,7 @@
       <div class="tables">
         <Table
           @takeTable="takeTable"
+          @close="close"
           :value="table.number"
           :persons="table.q_seats"
           :takenp="table.taken"
@@ -91,60 +92,59 @@ export default {
     this.pwd = "NTQzMjE=";
     this.xtoken = "";
     await axios
-        .post("https://www.re-check.com:8080/login", {
-          jsonrpc: "2.0",
-          method: "jwt",
-          params: [
+      .post("https://www.re-check.com:8080/login", {
+        jsonrpc: "2.0",
+        method: "jwt",
+        params: [
+          {
+            login: this.login,
+            client: this.client,
+            pwd: this.pwd,
+          },
+        ],
+        id: 4,
+      })
+      .then((data) => {
+        console.log(data.data.result);
+
+        let tables = data.data.result;
+        //console.log(tables["X-token"]);
+
+        this.bearer = tables.bearer;
+        this.xtoken = tables["X-token"];
+        console.log(this.xtoken);
+        axios
+          .post(
+            tables.url + "/menu",
+            { version: "1.0", method: "table.list", params: null },
             {
-              login: this.login,
-              client: this.client,
-              pwd: this.pwd,
-            },
-          ],
-          id: 4,
-        })
-        .then((data) => {
-          console.log(data.data.result);
-
-          let tables = data.data.result;
-          //console.log(tables["X-token"]);
-
-          this.bearer = tables.bearer;
-          this.xtoken = tables["X-token"];
-          console.log(this.xtoken);
-          axios
-            .post(
-              tables.url + "/menu",
-              { version: "1.0", method: "table.list", params: null },
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                  Authentication: "bearer " + tables.bearer,
-                  "x-token": tables["X-token"],
-                },
-              }
-            )
-            .then((data) => {
-              console.log(data);
-              this.tables = data.data.result.tables.filter((el) => {
-                el.taken = 0;
-                return el;
-              });
-              this.isLoading = false;
-              this.areas = data.data.result.areas;
-            })
-            .catch((err) => {
-              //this.err = err;
-              console.log(err);
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authentication: "bearer " + tables.bearer,
+                "x-token": tables["X-token"],
+              },
+            }
+          )
+          .then((data) => {
+            console.log(data);
+            this.tables = data.data.result.tables.filter((el) => {
+              el.taken = 0;
+              return el;
             });
-          
-        })
-        .catch((err) => {
-          this.err = err;
-        });
-    
-    console.log(this)
+            this.isLoading = false;
+            this.areas = data.data.result.areas;
+          })
+          .catch((err) => {
+            //this.err = err;
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        this.err = err;
+      });
+
+    console.log(this);
     console.log("a");
     console.log(this.xtoken);
     evtSource = new EventSource(
@@ -153,17 +153,12 @@ export default {
     sseFunction = function (event) {
       console.log(event.data, count, event.data['"current"']);
       let result = JSON.parse(event.data);
-      console.log(this.tables);
+      console.log(result);
       this.tables = this.tables.map((el) => {
-         result.current.forEach(tableId =>{
-          if(el.id === tableId)
-          {
-            el.taken = 2;
-          }
-         });
-          return el;
-        }
-      );
+        if (result.current.includes(el.id)) el.taken = 2;
+        else el.taken = 0;
+        return el;
+      });
 
       //if (count++ === 5)
       //{
@@ -171,9 +166,9 @@ export default {
       //  this.listening = false;
       //}
       //console.log(event.data);
-    }
+    };
 
-    evtSource.addEventListener("locks", sseFunction.bind(this), false) ;
+    evtSource.addEventListener("locks", sseFunction.bind(this), false);
   },
   onBeforeUnmount() {
     //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
@@ -247,6 +242,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 85%;
 }
 .tables {
   display: flex;
@@ -284,5 +280,3 @@ export default {
   }
 }
 </style>
-
-} 

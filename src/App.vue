@@ -8,17 +8,17 @@
 
 <script>
 export default {
-  name: 'App',
-}
+  name: "App",
+};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
 #app {
   display: flex;
   flex-direction: row;
   text-align: center;
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
   width: 1000px;
   margin: 0 auto;
 }
@@ -39,7 +39,7 @@ export default {
 }
 
 .route::before {
-  content: '';
+  content: "";
   left: 3px;
   top: 7px;
   width: 20px;

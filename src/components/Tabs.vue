@@ -3,7 +3,7 @@
     <Tab
       :value="tab.origname"
       @click="changeArea(tab.id)"
-      :class="{clicked: tab.id === selected}"
+      :class="{ clicked: tab.id === selected }"
       v-for="tab in tabsAll"
       :key="tab.id"
     />
@@ -11,39 +11,39 @@
 </template>
 
 <script>
-import Tab from './Tab.vue'
+import Tab from "./Tab.vue";
 
 export default {
-  name: 'Tabs',
-  props: ['tabs'],
+  name: "Tabs",
+  props: ["tabs"],
   components: {
     Tab,
   },
   computed: {
     tabsAll() {
-      return [{origname: 'Все', id: null}, ...this.tabs]
+      return [{ origname: "Все", id: null }, ...this.tabs];
     },
   },
   data() {
     return {
       selected: null,
-    }
+    };
   },
   methods: {
     changeArea(id) {
-      this.selected = id
-      this.$emit('changeArea', id)
+      this.selected = id;
+      this.$emit("changeArea", id);
     },
   },
   created() {
-    console.log(this.tabs)
+    console.log(this.tabs);
   },
-}
+};
 </script>
 
 <style scoped>
 * {
-  font-family: 'Oswald', sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 /* Style the tab */
 .tab {
