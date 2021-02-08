@@ -1,6 +1,6 @@
 <template>
   <div :class="{ wrapper: true, blur: loggedin }">
-    <Loading v-if="isLoading" />
+    <it-progressbar class="loading" v-if="isLoading" infinite />
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
@@ -29,22 +29,37 @@
     </div>
   </div>
 </template>
-
+<style scoped>
+.loading {
+  margin-top: 50vh;
+}
+</style>
 <script>
 import Table from "./Table.vue";
 import SelectedTable from "./SelectedTable.vue";
 import Tabs from "./Tabs.vue";
 import axios from "axios";
-import Loading from "./Loading.vue";
+//import Loading from "./Loading.vue";
 
 let evtSource;
-let sseFunction;
 let count = 0;
+
+function sseFunction(event) {
+  console.log(event.data, count, event.data['"current"']);
+  let result = JSON.parse(event.data);
+  console.log(result);
+  console.log(this);
+  this.tables = this.tables.map((el) => {
+    if (result.current.includes(el.id)) el.taken = 2;
+    else el.taken = 0;
+    return el;
+  });
+}
+
 export default {
   name: "Main",
   components: {
     Table,
-    Loading,
     Tabs,
     SelectedTable,
   },
@@ -87,6 +102,12 @@ export default {
   },
   async created() {
     //axios.defaults.withCredentials = true;
+
+    document.addEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange,
+      false
+    );
     this.login = "12345";
     this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
     this.pwd = "NTQzMjE=";
@@ -147,35 +168,31 @@ export default {
     console.log(this);
     console.log("a");
     console.log(this.xtoken);
-    evtSource = new EventSource(
-      `https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
-    );
-    sseFunction = function (event) {
-      console.log(event.data, count, event.data['"current"']);
-      let result = JSON.parse(event.data);
-      console.log(result);
-      this.tables = this.tables.map((el) => {
-        if (result.current.includes(el.id)) el.taken = 2;
-        else el.taken = 0;
-        return el;
-      });
-
-      //if (count++ === 5)
-      //{
-      //  evtSource.removeEventListener("locks", sseFunction, false)
-      //  this.listening = false;
-      //}
-      //console.log(event.data);
-    };
-
-    evtSource.addEventListener("locks", sseFunction.bind(this), false);
+    this.getConnection(this);
+    console.log("Locks");
   },
   onBeforeUnmount() {
     //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
     //evtSource.removeEventListener("locks", sseFunction, false)
-    evtSource.close();
+    //evtSource.close();
   },
   methods: {
+    getConnection(self) {
+      evtSource = new EventSource(
+        `https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
+      );
+
+      evtSource.addEventListener("locks", sseFunction.bind(self), false);
+    },
+    handleVisibilityChange() {
+      console.log(document.visibilityState);
+      if (document.visibilityState == "hidden") {
+        //evtSource.removeEventListener("locks", sseFunction.bind(this), false);
+        evtSource.close();
+      } else {
+        this.getConnection(this);
+      }
+    },
     submit() {},
     close(id) {
       axios
