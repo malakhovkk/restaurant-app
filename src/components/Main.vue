@@ -2,6 +2,9 @@
   <div :class="{ wrapper: true, blur: loggedin }">
     <it-progressbar class="loading" v-if="isLoading" infinite />
     <div v-if="err">{{ err }}</div>
+    <div class="login">
+      <LogIn />
+    </div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
       <div class="tables">
@@ -33,11 +36,15 @@
 .loading {
   margin-top: 50vh;
 }
+.login {
+  position: absolute;
+}
 </style>
 <script>
 import Table from "./Table.vue";
 import SelectedTable from "./SelectedTable.vue";
 import Tabs from "./Tabs.vue";
+import LogIn from "./LogIn.vue";
 import axios from "axios";
 //import Loading from "./Loading.vue";
 
@@ -62,6 +69,7 @@ export default {
     Table,
     Tabs,
     SelectedTable,
+    LogIn,
   },
   props: {},
   data: () => {
