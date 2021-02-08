@@ -1,80 +1,82 @@
 <template>
   <div class="container">
-    <it-button class="right" @click="signinModal = true" type="primary"
-      >Sign up</it-button
-    >
+    <div class="right">
+      <it-button @click="signinModal = true" type="primary">Войти</it-button>
+    </div>
   </div>
   <it-modal v-model="signinModal">
     <template #body>
       <div class="signupmodal">
-        <h2>Sign up</h2>
+        <h2>Войти</h2>
+
         <it-input
-          labelTop="Email"
-          prefix-icon="email"
-          type="email"
-          placeholder="yourmail@gmail.com"
-        />
-        <div style="display: flex; flex-direction: row">
-          <it-input style="flex: 1" labelTop="First Name" placeholder="John" />
-          <it-input
-            style="flex: 1; margin-left: 12px"
-            labelTop="Second Name"
-            placeholder="Doe"
-          />
-        </div>
-        <it-input
+          class="input"
           labelTop="Username"
           prefix-icon="account_circle"
-          placeholder="Unique Username"
+          placeholder="Username"
+          v-model="username"
         />
         <it-input
+          class="input"
           labelTop="Password"
           prefix-icon="lock"
           type="password"
-          placeholder="Must have at least 6 characters"
+          placeholder="Password"
+          v-model="pwd"
         />
-        <it-checkbox
-          v-model="signincheckbox"
-          label="I agree to our Terms of Service"
-        />
+        <div class="input">
+          <it-checkbox
+            v-model="signincheckbox"
+            label="I agree to our Terms of Service"
+          />
+        </div>
         <it-button
           block
           size="big"
           type="primary"
-          @click="$Message.success({ text: 'Welcome' }), (signinModal = false)"
-          >Sign up</it-button
+          @click="
+            $Message.success({ text: 'Welcome' }),
+              (signinModal = false),
+              $emit('submit', username, pwd)
+          "
+          >Войти</it-button
         >
       </div>
     </template>
   </it-modal>
-  <style>
-    .right {
-      position: absolute;
-      right: 0;
-
-      top: 20px;
-      right: 20px;
-    }
-    .container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .half {
-      height: 50vh;
-    }
-  </style>
-  <script>
-    export default {
-      name: "LogIn",
-      data() {
-        return {
-          name: "John Silver",
-          drawerVisible: false,
-        };
-      },
-    };
-  </script>
 </template>
+
+<style>
+.input {
+  margin-bottom: 10px;
+}
+.right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.half {
+  height: 50vh;
+}
+</style>
+<script>
+export default {
+  name: "LogIn",
+  data() {
+    return {
+      name: "John Silver",
+      signinModal: false,
+      signincheckbox: false,
+      username: null,
+      pwd: null,
+    };
+  },
+};
+</script>

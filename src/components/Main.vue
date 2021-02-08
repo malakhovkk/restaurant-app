@@ -3,7 +3,7 @@
     <it-progressbar class="loading" v-if="isLoading" infinite />
     <div v-if="err">{{ err }}</div>
     <div class="login">
-      <LogIn />
+      <LogIn @submit="submit" />
     </div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
@@ -50,6 +50,8 @@ import axios from "axios";
 
 let evtSource;
 let count = 0;
+
+var base64 = require("base-64");
 
 function sseFunction(event) {
   console.log(event.data, count, event.data['"current"']);
@@ -110,74 +112,6 @@ export default {
   },
   async created() {
     //axios.defaults.withCredentials = true;
-
-    document.addEventListener(
-      "visibilitychange",
-      this.handleVisibilityChange,
-      false
-    );
-    this.login = "12345";
-    this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
-    this.pwd = "NTQzMjE=";
-    this.xtoken = "";
-    await axios
-      .post("https://www.re-check.com:8080/login", {
-        jsonrpc: "2.0",
-        method: "jwt",
-        params: [
-          {
-            login: this.login,
-            client: this.client,
-            pwd: this.pwd,
-          },
-        ],
-        id: 4,
-      })
-      .then((data) => {
-        console.log(data.data.result);
-
-        let tables = data.data.result;
-        //console.log(tables["X-token"]);
-
-        this.bearer = tables.bearer;
-        this.xtoken = tables["X-token"];
-        console.log(this.xtoken);
-        axios
-          .post(
-            tables.url + "/menu",
-            { version: "1.0", method: "table.list", params: null },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authentication: "bearer " + tables.bearer,
-                "x-token": tables["X-token"],
-              },
-            }
-          )
-          .then((data) => {
-            console.log(data);
-            this.tables = data.data.result.tables.filter((el) => {
-              el.taken = 0;
-              return el;
-            });
-            this.isLoading = false;
-            this.areas = data.data.result.areas;
-          })
-          .catch((err) => {
-            //this.err = err;
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        this.err = err;
-      });
-
-    console.log(this);
-    console.log("a");
-    console.log(this.xtoken);
-    this.getConnection(this);
-    console.log("Locks");
   },
   onBeforeUnmount() {
     //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
@@ -201,7 +135,77 @@ export default {
         this.getConnection(this);
       }
     },
-    submit() {},
+    async submit(user, pwd) {
+      console.log(user, pwd);
+      document.addEventListener(
+        "visibilitychange",
+        this.handleVisibilityChange,
+        false
+      );
+      this.login = user;
+      this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
+      this.pwd = base64.encode(pwd);
+      console.log(base64.encode(pwd));
+      this.xtoken = "";
+      await axios
+        .post("https://www.re-check.com:8080/login", {
+          jsonrpc: "2.0",
+          method: "jwt",
+          params: [
+            {
+              login: this.login,
+              client: this.client,
+              pwd: this.pwd,
+            },
+          ],
+          id: 4,
+        })
+        .then((data) => {
+          console.log(data.data.result);
+
+          let tables = data.data.result;
+          console.log(this);
+
+          this.bearer = tables.bearer;
+          this.xtoken = tables["X-token"];
+          console.log(this.xtoken);
+          axios
+            .post(
+              tables.url + "/menu",
+              { version: "1.0", method: "table.list", params: null },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                  Authentication: "bearer " + tables.bearer,
+                  "x-token": tables["X-token"],
+                },
+              }
+            )
+            .then((data) => {
+              console.log(data);
+              this.tables = data.data.result.tables.filter((el) => {
+                el.taken = 0;
+                return el;
+              });
+              this.isLoading = false;
+              this.areas = data.data.result.areas;
+            })
+            .catch((err) => {
+              //this.err = err;
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          this.err = err;
+        });
+
+      console.log(this);
+      console.log("a");
+      console.log(this.xtoken);
+      this.getConnection(this);
+      console.log("Locks");
+    },
     close(id) {
       axios
         .post(this.url + "unlock/" + id, "", {
