@@ -1,9 +1,19 @@
 <template>
-  <div class="container">
-    <div class="right">
-      <it-button @click="signinModal = true" type="primary">Войти</it-button>
-    </div>
+  <div class="mid">
+    <it-button
+      :style="{
+        'font-size': '50px',
+        padding: '25px',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+      }"
+      @click="signinModal = true"
+      type="primary"
+      >Войти</it-button
+    >
   </div>
+
   <it-modal v-model="signinModal">
     <template #body>
       <div class="signupmodal">
@@ -28,11 +38,7 @@
           block
           size="big"
           type="primary"
-          @click="
-            $Message.success({ text: 'Welcome' }),
-              (signinModal = false),
-              $emit('submit', username, pwd)
-          "
+          @click="(signinModal = false), $emit('submit', username, pwd)"
           >Войти</it-button
         >
       </div>
@@ -41,6 +47,13 @@
 </template>
 
 <style>
+.mid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  padding: 25px;
+}
 .input {
   margin-bottom: 10px;
 }

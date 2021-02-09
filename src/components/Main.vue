@@ -1,10 +1,10 @@
 <template>
   <div :class="{ wrapper: true, blur: loggedin }">
     <it-progressbar class="loading" v-if="isLoading" infinite />
-    <div v-if="err">{{ err }}</div>
-    <div class="login">
+    <div class="login" v-if="!login">
       <LogIn @submit="submit" />
     </div>
+    <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
       <div class="tables">
@@ -173,7 +173,6 @@ export default {
         .then((data) => data.json())
         .then(async (data) => {
           console.log(data.result);
-          alert(1);
           let tables = data.result;
           console.log(this);
 
@@ -206,14 +205,17 @@ export default {
               });
               this.isLoading = false;
               this.areas = data.result.areas;
+              this.$Message.success({ text: "Welcome" });
             })
             .catch((err) => {
               //this.err = err;
               console.log(err);
+              this.$Message.danger({ text: "Failed" });
             });
         })
         .catch((err) => {
-          console.log("AA", err);
+          console.log(err);
+          this.$Message.danger({ text: "Failed" });
         });
 
       console.log(this);
