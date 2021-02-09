@@ -45,7 +45,7 @@ import Table from "./Table.vue";
 import SelectedTable from "./SelectedTable.vue";
 import Tabs from "./Tabs.vue";
 import LogIn from "./LogIn.vue";
-import axios from "axios";
+//import axios from "axios";
 //import Loading from "./Loading.vue";
 
 let evtSource;
@@ -60,6 +60,7 @@ function sseFunction(event) {
   console.log(this);
   this.tables = this.tables.map((el) => {
     if (result.current.includes(el.id)) el.taken = 2;
+    else if (result.foreign.includes(el.id)) el.taken = 3;
     else el.taken = 0;
     return el;
   });
@@ -112,6 +113,11 @@ export default {
   },
   async created() {
     //axios.defaults.withCredentials = true;
+    document.addEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange,
+      false
+    );
   },
   onBeforeUnmount() {
     //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
@@ -120,8 +126,10 @@ export default {
   },
   methods: {
     getConnection(self) {
+      if (evtSource) evtSource.close();
       evtSource = new EventSource(
         `https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
+        //`http://192.168.1.11:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
       );
 
       evtSource.addEventListener("locks", sseFunction.bind(self), false);
@@ -130,25 +138,26 @@ export default {
       console.log(document.visibilityState);
       if (document.visibilityState == "hidden") {
         //evtSource.removeEventListener("locks", sseFunction.bind(this), false);
-        evtSource.close();
+        if (!this.isLoading) evtSource.close();
       } else {
-        this.getConnection(this);
+        if (!this.isLoading) this.getConnection(this);
       }
     },
     async submit(user, pwd) {
       console.log(user, pwd);
-      document.addEventListener(
-        "visibilitychange",
-        this.handleVisibilityChange,
-        false
-      );
       this.login = user;
       this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
       this.pwd = base64.encode(pwd);
       console.log(base64.encode(pwd));
-      this.xtoken = "";
-      await axios
-        .post("https://www.re-check.com:8080/login", {
+      //this.xtoken = "";
+      await fetch("https://www.re-check.com:8080/login", {
+        method: "post",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           jsonrpc: "2.0",
           method: "jwt",
           params: [
@@ -159,37 +168,44 @@ export default {
             },
           ],
           id: 4,
-        })
-        .then((data) => {
-          console.log(data.data.result);
-
-          let tables = data.data.result;
+        }),
+      })
+        .then((data) => data.json())
+        .then(async (data) => {
+          console.log(data.result);
+          alert(1);
+          let tables = data.result;
           console.log(this);
 
           this.bearer = tables.bearer;
           this.xtoken = tables["X-token"];
-          console.log(this.xtoken);
-          axios
-            .post(
-              tables.url + "/menu",
-              { version: "1.0", method: "table.list", params: null },
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                  Authentication: "bearer " + tables.bearer,
-                  "x-token": tables["X-token"],
-                },
-              }
-            )
+          console.log(this);
+          //tables.url = "http://192.168.1.11:5000";
+          this.url = tables.url;
+          await fetch(tables.url + "/menu", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authentication: "bearer " + tables.bearer,
+              "x-token": tables["X-token"],
+            },
+            body: JSON.stringify({
+              version: "1.0",
+              method: "table.list",
+              params: null,
+            }),
+          })
+            .then((data) => data.json())
             .then((data) => {
               console.log(data);
-              this.tables = data.data.result.tables.filter((el) => {
+              this.tables = data.result.tables.filter((el) => {
                 el.taken = 0;
                 return el;
               });
               this.isLoading = false;
-              this.areas = data.data.result.areas;
+              this.areas = data.result.areas;
             })
             .catch((err) => {
               //this.err = err;
@@ -197,7 +213,7 @@ export default {
             });
         })
         .catch((err) => {
-          this.err = err;
+          console.log("AA", err);
         });
 
       console.log(this);
@@ -207,13 +223,16 @@ export default {
       console.log("Locks");
     },
     close(id) {
-      axios
-        .post(this.url + "unlock/" + id, "", {
-          headers: {
-            Authentication: "bearer " + this.bearer,
-            "x-token": this.xtoken,
-          },
-        })
+      fetch(this.url + "/tables/unlock/" + id, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          //"Content-Type": "application/json",
+          Authentication: "bearer " + this.bearer,
+          "x-token": this.xtoken,
+        },
+      })
+        .then((data) => data.json())
         .then((data) => {
           console.log(data);
         })
@@ -233,13 +252,15 @@ export default {
     },
     takeTable(id, taken) {
       console.log(10);
-      axios
-        .post(this.url + "lock/" + id, "", {
-          headers: {
-            Authentication: "bearer " + this.bearer,
-            "x-token": this.xtoken,
-          },
-        })
+      fetch(this.url + "/tables/lock/" + id, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          //"Content-Type": "application/json",
+          Authentication: "bearer " + this.bearer,
+          "x-token": this.xtoken,
+        },
+      })
         .then((data) => {
           console.log(data);
         })

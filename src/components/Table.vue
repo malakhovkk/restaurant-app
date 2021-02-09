@@ -6,6 +6,7 @@
         'table--taken': takenp === 1,
         'table--free': takenp === 0,
         'table--selected': takenp === 2,
+        'table--locked': takenp === 3,
       },
       ,
       'b',
@@ -87,7 +88,19 @@ export default {
 .table--selected {
   background-image: linear-gradient(to bottom left, #e14eca, #b641f9, #e14eca);
 }
-
+.table--locked {
+  background-image: linear-gradient(to bottom left, #49d84e, #40c750, #3f9a42);
+}
+.table--locked::after {
+  content: "";
+  height: 20px;
+  width: 20px;
+  background-image: url(../../public/images/lock.png);
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  background-size: cover;
+}
 @media only screen and (max-width: 500px) {
   .b {
     width: 65px;

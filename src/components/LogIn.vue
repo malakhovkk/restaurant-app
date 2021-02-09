@@ -24,12 +24,6 @@
           placeholder="Password"
           v-model="pwd"
         />
-        <div class="input">
-          <it-checkbox
-            v-model="signincheckbox"
-            label="I agree to our Terms of Service"
-          />
-        </div>
         <it-button
           block
           size="big"
@@ -68,14 +62,14 @@
 </style>
 <script>
 export default {
+  emits: ["submit"],
   name: "LogIn",
   data() {
     return {
       name: "John Silver",
       signinModal: false,
-      signincheckbox: false,
-      username: null,
-      pwd: null,
+      username: "12345",
+      pwd: "54321",
     };
   },
 };
