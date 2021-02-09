@@ -1,6 +1,6 @@
 <template>
   <div :class="{ wrapper: true, blur: loggedin }">
-    <it-progressbar class="loading" v-if="isLoading" infinite />
+    <!--  <it-progressbar class="loading" v-if="isLoading" infinite /> -->
     <div class="login" v-if="!login">
       <LogIn @submit="submit" />
     </div>
