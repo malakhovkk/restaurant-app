@@ -28,7 +28,7 @@ export default {
   /* background-image: linear-gradient(to bottom left, #cec92f, #c6da1d, #c2c512); */
   /*background-image: linear-gradient(to bottom left, #fff705, #e7fb48, #fbff00);*/
   /*background-image: linear-gradient(to right, #d4e834, #fcff00);*/
-  background-color: yellow;
+  background-color: #eaea0e;
   box-shadow: 0 4px 4px 0 rgb(0 0 0 / 5%), 0 6px 10px 0 rgb(0 0 0 / 5%);
   border-radius: 3px;
   height: 90vh;
