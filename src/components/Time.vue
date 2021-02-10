@@ -5,6 +5,9 @@
 <script>
 export default {
   name: "Time",
+  created() {
+    console.log(1);
+  },
 };
 </script>
 

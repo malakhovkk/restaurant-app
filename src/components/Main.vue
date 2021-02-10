@@ -1,9 +1,9 @@
 <template>
   <div :class="{ wrapper: true, blur: loggedin }">
     <!--  <it-progressbar class="loading" v-if="isLoading" infinite /> -->
-    <div class="login" v-if="!login">
-      <LogIn @submit="submit" />
-    </div>
+    <!-- <div class="login" v-if="!login">
+       <LogIn @submit="submit" />
+     </div> -->
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
@@ -44,14 +44,14 @@
 import Table from "./Table.vue";
 import SelectedTable from "./SelectedTable.vue";
 import Tabs from "./Tabs.vue";
-import LogIn from "./LogIn.vue";
+// import LogIn from "./LogIn.vue";
 //import axios from "axios";
 //import Loading from "./Loading.vue";
 
 let evtSource;
 let count = 0;
 
-var base64 = require("base-64");
+//var base64 = require("base-64");
 
 function sseFunction(event) {
   console.log(event.data, count, event.data['"current"']);
@@ -72,7 +72,6 @@ export default {
     Table,
     Tabs,
     SelectedTable,
-    LogIn,
   },
   props: {},
   data: () => {
@@ -118,6 +117,14 @@ export default {
       this.handleVisibilityChange,
       false
     );
+    this.xtoken = this.$route.params.xtoken;
+    this.bearer = this.$route.params.bearer;
+    this.url = this.$route.params.url;
+    this.client = this.$route.params.client;
+    this.login = this.$route.params.login;
+    console.log(this.xtoken, this.bearer, this.url);
+    this.getTables();
+    console.log(this.$route);
   },
   onBeforeUnmount() {
     //if(this.listening) evtSource.removeEventListener("locks", sseFunction, false)
@@ -125,8 +132,52 @@ export default {
     //evtSource.close();
   },
   methods: {
+    async getTables() {
+      if (!this.url) {
+        this.$router.push({
+          name: "LogIn",
+        });
+        return;
+      }
+      await fetch(this.url + "/menu", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authentication: "bearer " + this.bearer,
+          "x-token": this.xtoken,
+        },
+        body: JSON.stringify({
+          version: "1.0",
+          method: "table.list",
+          params: null,
+        }),
+      })
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data);
+          this.tables = data.result.tables.filter((el) => {
+            el.taken = 0;
+            return el;
+          });
+          this.isLoading = false;
+          this.areas = data.result.areas;
+          this.$Message.success({ text: "Welcome" });
+          console.log(this.xtoken);
+          this.getConnection(this);
+        })
+        .catch((err) => {
+          //this.err = err;
+          console.log(err);
+          this.$Message.danger({ text: "Failed" });
+        });
+    },
     getConnection(self) {
-      if (evtSource) evtSource.close();
+      if (evtSource) {
+        evtSource.close();
+        evtSource = null;
+      }
       evtSource = new EventSource(
         `https://www.re-check.com:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
         //`http://192.168.1.11:5000/sse/tables?clientid=${this.client}&user=${this.login}&x-token=${this.xtoken}`
@@ -143,87 +194,87 @@ export default {
         if (!this.isLoading) this.getConnection(this);
       }
     },
-    async submit(user, pwd) {
-      console.log(user, pwd);
-      this.login = user;
-      this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
-      this.pwd = base64.encode(pwd);
-      console.log(base64.encode(pwd));
-      //this.xtoken = "";
-      await fetch("https://www.re-check.com:8080/login", {
-        method: "post",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "jwt",
-          params: [
-            {
-              login: this.login,
-              client: this.client,
-              pwd: this.pwd,
-            },
-          ],
-          id: 4,
-        }),
-      })
-        .then((data) => data.json())
-        .then(async (data) => {
-          console.log(data.result);
-          let tables = data.result;
-          console.log(this);
+    // async submit(user, pwd) {
+    //   console.log(user, pwd);
+    //   this.login = user;
+    //   this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
+    //   this.pwd = base64.encode(pwd);
+    //   console.log(base64.encode(pwd));
+    //   //this.xtoken = "";
+    //   await fetch("https://www.re-check.com:8080/login", {
+    //     method: "post",
+    //     mode: "cors",
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       jsonrpc: "2.0",
+    //       method: "jwt",
+    //       params: [
+    //         {
+    //           login: this.login,
+    //           client: this.client,
+    //           pwd: this.pwd,
+    //         },
+    //       ],
+    //       id: 4,
+    //     }),
+    //   })
+    //     .then((data) => data.json())
+    //     .then(async (data) => {
+    //       console.log(data.result);
+    //       let tables = data.result;
+    //       console.log(this);
 
-          this.bearer = tables.bearer;
-          this.xtoken = tables["X-token"];
-          console.log(this);
-          //tables.url = "http://192.168.1.11:5000";
-          this.url = tables.url;
-          await fetch(tables.url + "/menu", {
-            method: "POST",
-            mode: "cors",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authentication: "bearer " + tables.bearer,
-              "x-token": tables["X-token"],
-            },
-            body: JSON.stringify({
-              version: "1.0",
-              method: "table.list",
-              params: null,
-            }),
-          })
-            .then((data) => data.json())
-            .then((data) => {
-              console.log(data);
-              this.tables = data.result.tables.filter((el) => {
-                el.taken = 0;
-                return el;
-              });
-              this.isLoading = false;
-              this.areas = data.result.areas;
-              this.$Message.success({ text: "Welcome" });
-            })
-            .catch((err) => {
-              //this.err = err;
-              console.log(err);
-              this.$Message.danger({ text: "Failed" });
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$Message.danger({ text: "Failed" });
-        });
+    //       this.bearer = tables.bearer;
+    //       this.xtoken = tables["X-token"];
+    //       console.log(this);
+    //       //tables.url = "http://192.168.1.11:5000";
+    //       this.url = tables.url;
+    //       await fetch(tables.url + "/menu", {
+    //         method: "POST",
+    //         mode: "cors",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Accept: "application/json",
+    //           Authentication: "bearer " + tables.bearer,
+    //           "x-token": tables["X-token"],
+    //         },
+    //         body: JSON.stringify({
+    //           version: "1.0",
+    //           method: "table.list",
+    //           params: null,
+    //         }),
+    //       })
+    //         .then((data) => data.json())
+    //         .then((data) => {
+    //           console.log(data);
+    //           this.tables = data.result.tables.filter((el) => {
+    //             el.taken = 0;
+    //             return el;
+    //           });
+    //           this.isLoading = false;
+    //           this.areas = data.result.areas;
+    //           this.$Message.success({ text: "Welcome" });
+    //         })
+    //         .catch((err) => {
+    //           //this.err = err;
+    //           console.log(err);
+    //           this.$Message.danger({ text: "Failed" });
+    //         });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       this.$Message.danger({ text: "Failed" });
+    //     });
 
-      console.log(this);
-      console.log("a");
-      console.log(this.xtoken);
-      this.getConnection(this);
-      console.log("Locks");
-    },
+    //   console.log(this);
+    //   console.log("a");
+    //   console.log(this.xtoken);
+    //   this.getConnection(this);
+    //   console.log("Locks");
+    // },
     close(id) {
       fetch(this.url + "/tables/unlock/" + id, {
         method: "POST",

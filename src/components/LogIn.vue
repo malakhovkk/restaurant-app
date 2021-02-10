@@ -38,7 +38,11 @@
           block
           size="big"
           type="primary"
-          @click="(signinModal = false), $emit('submit', username, pwd)"
+          @click="
+            (signinModal = false),
+              // $emit('submit', username, pwd),
+              submit(username, pwd)
+          "
           >Войти</it-button
         >
       </div>
@@ -74,15 +78,85 @@
 }
 </style>
 <script>
+var base64 = require("base-64");
+
 export default {
   emits: ["submit"],
   name: "LogIn",
+  methods: {
+    async submit(user, pwd) {
+      console.log(user, pwd);
+      this.login = user;
+      this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
+      this.pwd = base64.encode(pwd);
+      console.log(base64.encode(pwd));
+      //this.xtoken = "";
+      await fetch("https://www.re-check.com:8080/login", {
+        method: "post",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "jwt",
+          params: [
+            {
+              login: this.login,
+              client: this.client,
+              pwd: this.pwd,
+            },
+          ],
+          id: 4,
+        }),
+      })
+        .then((data) => data.json())
+        .then(async (data) => {
+          console.log(data.result);
+          let tables = data.result;
+          console.log(this);
+
+          this.bearer = tables.bearer;
+          this.xtoken = tables["X-token"];
+          console.log(this);
+          //tables.url = "http://192.168.1.11:5000";
+          this.url = tables.url;
+
+          this.$router.push({
+            name: "Main",
+            params: {
+              xtoken: this.xtoken,
+              bearer: this.bearer,
+              url: this.url,
+              login: this.login,
+              client: this.client,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$Message.danger({ text: "Failed" });
+        });
+
+      console.log(this);
+      console.log("a");
+      console.log(this.xtoken);
+      console.log("Locks");
+    },
+  },
   data() {
     return {
       name: "John Silver",
       signinModal: false,
       username: "12345",
       pwd: "54321",
+      login: null,
+      client: null,
+      bearer: null,
+      xtoken: null,
+      url: null,
+      tables: null,
     };
   },
 };
