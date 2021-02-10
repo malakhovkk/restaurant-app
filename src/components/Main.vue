@@ -135,7 +135,7 @@ export default {
     async getTables() {
       if (!this.url) {
         this.$router.push({
-          name: "LogIn",
+          path: "/",
         });
         return;
       }
