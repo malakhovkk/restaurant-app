@@ -205,6 +205,13 @@ export default {
         //evtSource.removeEventListener("locks", sseFunction.bind(this), false);
         if (!this.isLoading) evtSource.close();
       } else {
+        if (localStorage.xtoken) {
+          this.xtoken = localStorage.xtoken;
+          this.bearer = localStorage.bearer;
+          this.url = localStorage.url;
+          this.client = localStorage.client;
+          this.login = localStorage.login;
+        }
         if (!this.isLoading) this.getConnection(this);
       }
     },
