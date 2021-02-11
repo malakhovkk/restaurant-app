@@ -1,5 +1,5 @@
 <template>
-  <div class="mid">
+  <!-- <div class="mid">
     <it-button
       :style="{
         'font-size': '50px',
@@ -12,7 +12,7 @@
       type="primary"
       >Войти</it-button
     >
-  </div>
+  </div> -->
 
   <it-modal v-model="signinModal">
     <template #body>
@@ -39,9 +39,9 @@
           size="big"
           type="primary"
           @click="
-            (signinModal = false),
-              // $emit('submit', username, pwd),
-              submit(username, pwd)
+            // (signinModal = false),
+            // $emit('submit', username, pwd),
+            submit(username, pwd)
           "
           >Войти</it-button
         >
@@ -148,7 +148,7 @@ export default {
   data() {
     return {
       name: "John Silver",
-      signinModal: false,
+      signinModal: true,
       username: "12345",
       pwd: "54321",
       login: null,
