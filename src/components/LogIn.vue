@@ -92,10 +92,9 @@ export default {
   },
   methods: {
     async submit(user, pwd) {
-      console.log(user, pwd);
+      // console.log(user, pwd);
       this.login = user;
       this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
-      this.pwd = base64.encode(pwd);
       console.log(base64.encode(pwd));
       //this.xtoken = "";
       await fetch("https://www.re-check.com:8080/login", {
@@ -112,7 +111,7 @@ export default {
             {
               login: this.login,
               client: this.client,
-              pwd: this.pwd,
+              pwd: base64.encode(pwd),
             },
           ],
           id: 4,

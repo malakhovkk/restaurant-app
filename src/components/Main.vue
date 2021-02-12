@@ -4,6 +4,9 @@
     <!-- <div class="login" v-if="!login">
        <LogIn @submit="submit" />
      </div> -->
+    <div class="logout" @click="logout">
+      <img src="images/logout.png" />
+    </div>
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
@@ -33,6 +36,11 @@
   </div>
 </template>
 <style scoped>
+.logout {
+  width: 30px;
+  height: 30px;
+  margin-left: 80%;
+}
 .loading {
   margin-top: 50vh;
 }
@@ -88,7 +96,6 @@ export default {
       pwd: null,
       loggedin: false,
       listening: true,
-      url: "https://www.re-check.com:5000/tables/",
     };
   },
   beforeCreate() {},
@@ -134,7 +141,6 @@ export default {
       localStorage.bearer = this.$route.params.bearer;
       localStorage.url = this.$route.params.url;
       localStorage.client = this.$route.params.client;
-      localStorage.login = this.$route.params.login;
     }
     console.log(this.xtoken, this.bearer, this.url);
     this.getTables();
@@ -146,6 +152,17 @@ export default {
     //evtSource.close();
   },
   methods: {
+    logout() {
+      localStorage.removeItem("login");
+      localStorage.removeItem("xtoken");
+      localStorage.removeItem("bearer");
+      localStorage.removeItem("url");
+      localStorage.removeItem("client");
+      localStorage.removeItem("login");
+      this.$router.push({
+        path: "/",
+      });
+    },
     async getTables() {
       if (!this.url) {
         this.$router.push({
