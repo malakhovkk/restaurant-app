@@ -108,6 +108,14 @@ export default {
         path: "/main",
       });
   },
+  watch: {
+    pwd() {
+      this.err = null;
+    },
+    username() {
+      this.err = null;
+    },
+  },
   methods: {
     async submit(user, pwd) {
       // console.log(user, pwd);
