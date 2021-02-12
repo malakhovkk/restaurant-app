@@ -40,6 +40,7 @@
   width: 30px;
   height: 30px;
   margin-left: 80%;
+  cursor: pointer;
 }
 .loading {
   margin-top: 50vh;

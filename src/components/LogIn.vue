@@ -14,43 +14,56 @@
     >
   </div> -->
 
-  <it-modal v-model="signinModal">
-    <template #body>
-      <div class="signupmodal">
-        <h2>Войти</h2>
-
-        <it-input
-          class="input"
-          labelTop="Username"
-          prefix-icon="account_circle"
-          placeholder="Username"
-          v-model="username"
-        />
-        <it-input
-          class="input"
-          labelTop="Password"
-          prefix-icon="lock"
-          type="password"
-          placeholder="Password"
-          v-model="pwd"
-        />
-        <it-button
-          block
-          size="big"
-          type="primary"
-          @click="
-            // (signinModal = false),
-            // $emit('submit', username, pwd),
-            submit(username, pwd)
-          "
-          >Войти</it-button
-        >
-      </div>
-    </template>
-  </it-modal>
+  <div class="signup">
+    <form @submit="(e) => e.preventDefault()">
+      <h2>Войти</h2>
+      <it-input
+        class="input"
+        labelTop="Username"
+        prefix-icon="account_circle"
+        placeholder="Username"
+        v-model="username"
+      />
+      <it-input
+        class="input"
+        labelTop="Password"
+        prefix-icon="lock"
+        type="password"
+        placeholder="Password"
+        v-model="pwd"
+      />
+      <it-button
+        block
+        size="big"
+        type="primary"
+        @click="
+          // (signinModal = false),
+          // $emit('submit', username, pwd),
+          submit(username, pwd)
+        "
+        >Войти</it-button
+      >
+    </form>
+  </div>
 </template>
 
 <style>
+form {
+  width: 500px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 3px;
+  margin: 0 auto;
+}
+.signup {
+  width: 600px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+}
 .mid {
   position: absolute;
   top: 50%;
