@@ -83,6 +83,13 @@ var base64 = require("base-64");
 export default {
   emits: ["submit"],
   name: "LogIn",
+  beforeCreate() {
+    console.log(localStorage.url);
+    if (localStorage.url)
+      this.$router.push({
+        path: "/main",
+      });
+  },
   methods: {
     async submit(user, pwd) {
       console.log(user, pwd);

@@ -117,24 +117,24 @@ export default {
       this.handleVisibilityChange,
       false
     );
-    this.xtoken = this.$route.params.xtoken;
-    this.bearer = this.$route.params.bearer;
-    this.url = this.$route.params.url;
-    this.client = this.$route.params.client;
-    this.login = this.$route.params.login;
-    if (this.$route.params.login) {
+    // this.xtoken = this.$route.params.xtoken;
+    // this.bearer = this.$route.params.bearer;
+    // this.url = this.$route.params.url;
+    // this.client = this.$route.params.client;
+    // this.login = this.$route.params.login;
+    if (localStorage.xtoken) {
+      this.xtoken = localStorage.xtoken;
+      this.bearer = localStorage.bearer;
+      this.url = localStorage.url;
+      this.client = localStorage.client;
+      this.login = localStorage.login;
+    } else if (this.$route.params.xtoken) {
       localStorage.login = this.$route.params.login;
       localStorage.xtoken = this.$route.params.xtoken;
       localStorage.bearer = this.$route.params.bearer;
       localStorage.url = this.$route.params.url;
       localStorage.client = this.$route.params.client;
       localStorage.login = this.$route.params.login;
-    } else {
-      this.xtoken = localStorage.xtoken;
-      this.bearer = localStorage.bearer;
-      this.url = localStorage.url;
-      this.client = localStorage.client;
-      this.login = localStorage.login;
     }
     console.log(this.xtoken, this.bearer, this.url);
     this.getTables();
