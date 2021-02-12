@@ -49,7 +49,7 @@
 
 <style>
 form {
-  width: 500px;
+  width: 300px;
   background-color: white;
   padding: 30px;
   border-radius: 3px;
