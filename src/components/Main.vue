@@ -195,7 +195,7 @@ export default {
           });
           this.isLoading = false;
           this.areas = data.result.areas;
-          this.$Message.success({ text: "Welcome" });
+          //this.$Message.success({ text: "Welcome" });
           console.log(this.xtoken);
           this.getConnection(this);
         })

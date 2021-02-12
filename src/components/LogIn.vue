@@ -43,11 +43,16 @@
         "
         >Войти</it-button
       >
+      <div class="error">{{ err }}</div>
     </form>
   </div>
 </template>
 
 <style>
+.error {
+  color: red;
+  font-size: 20px;
+}
 form {
   width: 300px;
   background-color: white;
@@ -153,9 +158,9 @@ export default {
             },
           });
         })
-        .catch((err) => {
-          console.log(err);
-          this.$Message.danger({ text: "Failed" });
+        .catch(() => {
+          this.err = "Не удалось войти";
+          //this.$Message.danger({ text: "Failed" });
         });
 
       console.log(this);
@@ -175,6 +180,7 @@ export default {
       bearer: null,
       xtoken: null,
       url: null,
+      err: null,
       tables: null,
     };
   },
