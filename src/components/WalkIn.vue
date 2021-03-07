@@ -18,8 +18,9 @@
       <it-number-input label-top="Кол-во людей:" v-model="amountOfPeople">
       </it-number-input>
       <br />
-      Время: <br /><br />
-      <it-slider v-model="time" numbers :min="0" :max="360" />
+      Время:
+      <it-select v-model="time" :options="exampleOptions" />
+      <br />
       <br />
       <div class="res">
         <it-button @click="cancel()" size="normal" class="cancel"
@@ -48,7 +49,23 @@ export default {
       phone: "",
       name: "",
       info: "",
-      time: 30,
+      time: "01:00",
+      exampleOptions: [
+        "00:30",
+        "01:00",
+        "01:30",
+        "02:00",
+        "02:30",
+        "03:00",
+        "03:30",
+        "04:00",
+        "04:30",
+        "05:00",
+        "05:30",
+        "06:00",
+        "06:30",
+        "07:00",
+      ],
     };
   },
   watch: {
