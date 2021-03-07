@@ -1,5 +1,6 @@
 <template>
   <div id="nav" v-if="$route.path !== '/'">
+    <Clock />
     <router-link class="route main" to="/main">Main</router-link>
     <router-link class="route time" to="/main">Time</router-link>
   </div>
@@ -7,8 +8,13 @@
 </template>
 
 <script>
+import Clock from "./components/Clock.vue";
+
 export default {
   name: "App",
+  components: {
+    Clock,
+  },
 };
 </script>
 
@@ -88,7 +94,7 @@ export default {
 .route {
   text-decoration: none;
   color: white;
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
 .route {
   position: relative;

@@ -7,8 +7,10 @@
     <div class="logout" @click="logout">
       <img src="images/logout.png" />
     </div>
+    <span class="walkin" @click="walkin = true">Walk-in</span>
     <div v-if="err">{{ err }}</div>
     <div v-if="!isLoading">
+      <WalkIn v-if="walkin" :tables="AllTables" @cancel="cancel()" />
       <Tabs :tabs="AreasNames" @changeArea="changeArea" />
       <div class="tables">
         <Table
@@ -36,6 +38,9 @@
   </div>
 </template>
 <style scoped>
+.tables {
+  z-index: 1;
+}
 .logout {
   width: 30px;
   height: 30px;
@@ -48,11 +53,15 @@
 .login {
   position: absolute;
 }
+.walkin {
+  cursor: pointer;
+}
 </style>
 <script>
 import Table from "./Table.vue";
 import SelectedTable from "./SelectedTable.vue";
 import Tabs from "./Tabs.vue";
+import WalkIn from "./WalkIn.vue";
 // import LogIn from "./LogIn.vue";
 //import axios from "axios";
 //import Loading from "./Loading.vue";
@@ -81,6 +90,7 @@ export default {
     Table,
     Tabs,
     SelectedTable,
+    WalkIn,
   },
   props: {},
   data: () => {
@@ -97,6 +107,7 @@ export default {
       pwd: null,
       loggedin: false,
       listening: true,
+      walkin: false,
     };
   },
   beforeCreate() {},
@@ -117,6 +128,11 @@ export default {
       console.log(this.tables.filter((el) => el.taken === 2));
       return this.tables.filter((el) => el.taken === 2);
     },
+    AllTables() {
+      let tables = this.tables.filter((el) => el.taken === 2);
+      console.log(tables);
+      return tables.map((el) => el.number);
+    },
   },
   async created() {
     //axios.defaults.withCredentials = true;
@@ -125,6 +141,7 @@ export default {
       this.handleVisibilityChange,
       false
     );
+
     // this.xtoken = this.$route.params.xtoken;
     // this.bearer = this.$route.params.bearer;
     // this.url = this.$route.params.url;
@@ -233,87 +250,6 @@ export default {
         if (!this.isLoading) this.getConnection(this);
       }
     },
-    // async submit(user, pwd) {
-    //   console.log(user, pwd);
-    //   this.login = user;
-    //   this.client = "{0DA6EA6D-CC7D-4EBA-A989-9293923BDE1E}";
-    //   this.pwd = base64.encode(pwd);
-    //   console.log(base64.encode(pwd));
-    //   //this.xtoken = "";
-    //   await fetch("https://www.re-check.com:8080/login", {
-    //     method: "post",
-    //     mode: "cors",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       jsonrpc: "2.0",
-    //       method: "jwt",
-    //       params: [
-    //         {
-    //           login: this.login,
-    //           client: this.client,
-    //           pwd: this.pwd,
-    //         },
-    //       ],
-    //       id: 4,
-    //     }),
-    //   })
-    //     .then((data) => data.json())
-    //     .then(async (data) => {
-    //       console.log(data.result);
-    //       let tables = data.result;
-    //       console.log(this);
-
-    //       this.bearer = tables.bearer;
-    //       this.xtoken = tables["X-token"];
-    //       console.log(this);
-    //       //tables.url = "http://192.168.1.11:5000";
-    //       this.url = tables.url;
-    //       await fetch(tables.url + "/menu", {
-    //         method: "POST",
-    //         mode: "cors",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Accept: "application/json",
-    //           Authentication: "bearer " + tables.bearer,
-    //           "x-token": tables["X-token"],
-    //         },
-    //         body: JSON.stringify({
-    //           version: "1.0",
-    //           method: "table.list",
-    //           params: null,
-    //         }),
-    //       })
-    //         .then((data) => data.json())
-    //         .then((data) => {
-    //           console.log(data);
-    //           this.tables = data.result.tables.filter((el) => {
-    //             el.taken = 0;
-    //             return el;
-    //           });
-    //           this.isLoading = false;
-    //           this.areas = data.result.areas;
-    //           this.$Message.success({ text: "Welcome" });
-    //         })
-    //         .catch((err) => {
-    //           //this.err = err;
-    //           console.log(err);
-    //           this.$Message.danger({ text: "Failed" });
-    //         });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       this.$Message.danger({ text: "Failed" });
-    //     });
-
-    //   console.log(this);
-    //   console.log("a");
-    //   console.log(this.xtoken);
-    //   this.getConnection(this);
-    //   console.log("Locks");
-    // },
     close(id) {
       fetch(this.url + "/tables/unlock/" + id, {
         method: "POST",
@@ -343,7 +279,6 @@ export default {
       this.idArea = id;
     },
     takeTable(id, taken) {
-      console.log(10);
       fetch(this.url + "/tables/lock/" + id, {
         method: "POST",
         mode: "cors",
@@ -365,6 +300,9 @@ export default {
         }
         return el;
       });
+    },
+    cancel() {
+      this.walkin = false;
     },
   },
 };
