@@ -95,7 +95,7 @@ export default {
   background: white;
   padding: 10px 15px;
   position: absolute;
-  top: 25%;
+  top: 10%;
   right: 25%;
   z-index: 1000;
   border-radius: 4px;
