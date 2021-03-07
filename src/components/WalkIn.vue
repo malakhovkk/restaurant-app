@@ -4,7 +4,7 @@
     <div class="wrapper">
       <div class="title">Walk-in</div>
 
-      <div class="time">Время: {{ hours }} : {{ minutes }}</div>
+      <div class="time">Текущее время: {{ hours }}:{{ minutes }}</div>
       <div class="tables">
         Столы:
         <it-tag v-for="table in tables" class="tables" :key="table">
