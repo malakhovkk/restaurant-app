@@ -136,6 +136,7 @@ export default {
   },
   async created() {
     //axios.defaults.withCredentials = true;
+    //this.walkin = true;
     document.addEventListener(
       "visibilitychange",
       this.handleVisibilityChange,

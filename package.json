@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@kevindesousa/vue-k-tabs": "^1.0.0",
+    "animate.css": "^4.1.1",
     "axios": "^0.21.1",
     "base-64": "^1.0.0",
     "buefy": "^0.9.4",
